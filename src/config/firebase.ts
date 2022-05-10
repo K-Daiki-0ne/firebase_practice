@@ -1,6 +1,6 @@
-import firebase from 'firebase/app';
+import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
-import { getAuth, GoogleAuthProvider } from  'firebase/auth';
+import { getAuth, GoogleAuthProvider, signInWithPopup } from  'firebase/auth';
 import { getStorage } from "firebase/storage";
 
 const config = {
@@ -13,9 +13,11 @@ const config = {
   measurementId:      process.env.NEXT_PUBLIC_MEASUREMENTID
 };
 
-const firebaseApp = firebase.initializeApp(config);
+const firebaseApp = initializeApp(config);
 
 export const db       = getFirestore(firebaseApp);
 export const auth     = getAuth();
 export const storage  = getStorage();
 export const provider = new GoogleAuthProvider();
+
+export const signInPopup = signInWithPopup(auth, provider);
