@@ -19,5 +19,3 @@ export const db       = getFirestore(firebaseApp);
 export const auth     = getAuth();
 export const storage  = getStorage();
 export const provider = new GoogleAuthProvider();
-
-export const signInPopup = signInWithPopup(auth, provider);

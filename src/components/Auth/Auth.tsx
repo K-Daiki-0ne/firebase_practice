@@ -3,9 +3,6 @@ import {
   Avatar,
   Button,
   TextField,
-  FormControlLabel,
-  Checkbox,
-  Link,
   Paper,
   Box,
   Grid,
@@ -13,19 +10,14 @@ import {
   CssBaseline
 }  from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LooksOutlined';
-
 import { useDispatch } from 'react-redux';
-import { auth, provider, storage, signInPopup } from '../../config/firebase';
+import { auth, provider, storage } from '../../config/firebase';
+import { signInWithPopup } from  'firebase/auth';
 
 export const Auth: React.FC = (): JSX.Element => {
 
-  const signInGoogle = () => {
-    signInPopup
-      .then((result) => {
-        console.log('hello')
-      }).catch((err) => {
-        console.error(err)
-      })
+  const signInGoogle = async () => {
+    await signInWithPopup(auth, provider).catch((err) => console.error('error'))
   }
 
   return (
