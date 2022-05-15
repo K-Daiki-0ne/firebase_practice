@@ -12,11 +12,22 @@ import {
 import LockOutlinedIcon from '@mui/icons-material/LooksOutlined';
 import { useDispatch } from 'react-redux';
 import { auth, provider, storage } from '../../config/firebase';
-import { signInWithPopup } from  'firebase/auth';
+import { signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword } from  'firebase/auth';
 
 export const Auth: React.FC = (): JSX.Element => {
+  const [email, setEmail]       = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [login, isLogin]        = useState<boolean>(true);
 
-  const signInGoogle = async () => {
+  const signInEmail = async (): Promise<void> => {
+    await signInWithEmailAndPassword(auth, email, password).catch((err) => console.error(err));
+  }
+
+  const signUpEmail = async (): Promise<void> => {
+    await createUserWithEmailAndPassword(auth, email, password).catch((err) => console.error(err))
+  }
+
+  const signInGoogle = async (): Promise<void> => {
     await signInWithPopup(auth, provider).catch((err) => console.error('error'))
   }
 
@@ -62,6 +73,7 @@ export const Auth: React.FC = (): JSX.Element => {
               label="Email Address"
               name="email"
               autoComplete="email"
+              value={email}
               autoFocus
             />
             <TextField
@@ -72,6 +84,7 @@ export const Auth: React.FC = (): JSX.Element => {
               label="Password"
               type="password"
               id="password"
+              value={password}
               autoComplete="current-password"
             />
             <Button
@@ -79,6 +92,7 @@ export const Auth: React.FC = (): JSX.Element => {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              
             >
               Sign In
             </Button>
