@@ -13,11 +13,12 @@ import LockOutlinedIcon from '@mui/icons-material/LooksOutlined';
 import { useDispatch } from 'react-redux';
 import { auth, provider, storage } from '../../config/firebase';
 import { signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword } from  'firebase/auth';
+import { async } from '@firebase/util';
 
 export const Auth: React.FC = (): JSX.Element => {
   const [email, setEmail]       = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [login, isLogin]        = useState<boolean>(true);
+  const [isLogin, setIsLogin]        = useState<boolean>(true);
 
   const signInEmail = async (): Promise<void> => {
     await signInWithEmailAndPassword(auth, email, password).catch((err) => console.error(err));
@@ -62,7 +63,7 @@ export const Auth: React.FC = (): JSX.Element => {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            { isLogin ? 'login' : 'egister' }
           </Typography>
           <Box component="form" noValidate sx={{ mt: 1 }}>
             <TextField
@@ -74,6 +75,7 @@ export const Auth: React.FC = (): JSX.Element => {
               name="email"
               autoComplete="email"
               value={email}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
               autoFocus
             />
             <TextField
@@ -85,17 +87,43 @@ export const Auth: React.FC = (): JSX.Element => {
               type="password"
               id="password"
               value={password}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
               autoComplete="current-password"
             />
             <Button
-              type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              
+              onClick={
+                isLogin
+                  ? async ()=> {
+                    try {
+                      await signInEmail();
+                    } catch(err) {
+                      console.error(err);
+                    }
+                  }
+                  : async () => {
+                    try {
+                      await signUpEmail();
+                    } catch(err) {
+                      console.error(err);
+                    }
+                  }
+              }
             >
-              Sign In
+              { isLogin ? 'login' : 'register' }
             </Button>
+            <Grid container>
+              <Grid item xs>
+                <span>パスワードをお忘れの方</span>
+              </Grid>
+              <Grid item xs>
+                <span onClick={() => setIsLogin(!isLogin)}>
+                  { isLogin ? 'アカウントを作成する' : 'ログインする' }
+                </span>
+              </Grid>
+            </Grid>
             <Button
               fullWidth
               variant="contained"
