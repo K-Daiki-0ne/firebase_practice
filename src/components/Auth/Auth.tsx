@@ -11,21 +11,39 @@ import {
 }  from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LooksOutlined';
 import { useDispatch } from 'react-redux';
-import { auth, provider, storage } from '../../config/firebase';
-import { signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword } from  'firebase/auth';
-import { async } from '@firebase/util';
+import { auth, provider } from '../../config/firebase';
+import { signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from  'firebase/auth';
+import { updateUserProfile } from '../../store/userSlice';
+import useStyle from './style';
 
 export const Auth: React.FC = (): JSX.Element => {
   const [email, setEmail]       = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [isLogin, setIsLogin]        = useState<boolean>(true);
+  const [isLogin, setIsLogin]   = useState<boolean>(true);
+  const [username, setUsername] = useState<string>('');
+
+  const classes = useStyle();
+  const dispatch = useDispatch();
 
   const signInEmail = async (): Promise<void> => {
     await signInWithEmailAndPassword(auth, email, password).catch((err) => console.error(err));
   }
 
   const signUpEmail = async (): Promise<void> => {
-    await createUserWithEmailAndPassword(auth, email, password).catch((err) => console.error(err))
+    try {
+      await createUserWithEmailAndPassword(auth, email, password).catch((err) => console.error(err));
+      await updateProfile(auth.currentUser, {
+        displayName: username,
+      })
+
+      dispatch(
+        updateUserProfile({
+          displayName: username
+        })
+      )
+    } catch(e) {
+      console.error(e);
+    }    
   }
 
   const signInGoogle = async (): Promise<void> => {
@@ -63,9 +81,9 @@ export const Auth: React.FC = (): JSX.Element => {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            { isLogin ? 'login' : 'egister' }
+            { isLogin ? 'login' : 'register' }
           </Typography>
-          <Box component="form" noValidate sx={{ mt: 1 }}>
+          <form  className={classes.form} noValidate>
             <TextField
               margin="normal"
               required
@@ -118,7 +136,7 @@ export const Auth: React.FC = (): JSX.Element => {
               <Grid item xs>
                 <span>パスワードをお忘れの方</span>
               </Grid>
-              <Grid item xs>
+              <Grid item>
                 <span onClick={() => setIsLogin(!isLogin)}>
                   { isLogin ? 'アカウントを作成する' : 'ログインする' }
                 </span>
@@ -132,7 +150,7 @@ export const Auth: React.FC = (): JSX.Element => {
             >
               Sign In With Google
             </Button>
-          </Box>
+          </form>
         </Box>
       </Grid>
     </Grid>
