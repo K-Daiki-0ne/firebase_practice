@@ -27,6 +27,15 @@ const useStyle = makeStyles({
     width: "100%",
     marginTop: '-2%',
   },
+  modal: {
+    outline: 'none',
+    position: 'absolute',
+    width: 400,
+    borderRadius: 10,
+    backgroundColor: 'white',
+    boxShadow: '2px, 2px, 2px black',
+    padding: '5%'
+  }
 });
 
 export default useStyle;

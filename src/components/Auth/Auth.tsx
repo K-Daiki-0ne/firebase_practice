@@ -7,23 +7,57 @@ import {
   Box,
   Grid,
   Typography,
-  CssBaseline
+  CssBaseline,
+  Modal,
+  IconButton
 }  from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LooksOutlined';
+import SendIcon from '@mui/icons-material/Send';
 import { useDispatch } from 'react-redux';
 import { auth, provider } from '../../config/firebase';
-import { signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from  'firebase/auth';
+import { 
+  signInWithPopup, 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword, 
+  updateProfile,
+  sendPasswordResetEmail
+} from  'firebase/auth';
 import { updateUserProfile } from '../../store/userSlice';
 import useStyle from './style';
 
+function getModalStyle() {
+  const top = 50;
+  const left = 50;
+
+  return {
+    top: `${top}%`,
+    left: `${left}%`,
+    transgorm: `translate(-${top}%, -${left}%)`,
+  }
+}
+
 export const Auth: React.FC = (): JSX.Element => {
-  const [email, setEmail]       = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [isLogin, setIsLogin]   = useState<boolean>(true);
-  const [username, setUsername] = useState<string>('');
+  const [email, setEmail]         = useState<string>('');
+  const [password, setPassword]   = useState<string>('');
+  const [isLogin, setIsLogin]     = useState<boolean>(true);
+  const [username, setUsername]   = useState<string>('');
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [resetEmail, setResetEmail]   = useState<string>('');
+
 
   const classes = useStyle();
   const dispatch = useDispatch();
+
+  const sendResetEmail = async (e: React.MouseEvent<HTMLElement>): Promise<void> => {
+    await sendPasswordResetEmail(auth, resetEmail)
+            .then(() => {
+              setOpenModal(false);
+              setResetEmail('');
+            })
+            .catch((err) => {
+              console.error(err);
+            })
+  }
 
   const signInEmail = async (): Promise<void> => {
     await signInWithEmailAndPassword(auth, email, password).catch((err) => console.error(err));
@@ -153,10 +187,12 @@ export const Auth: React.FC = (): JSX.Element => {
             </Button>
             <Grid container>
               <Grid item xs>
-                <span>パスワードをお忘れの方</span>
+                <span className={classes.loginReset} onClick={() => setOpenModal(true)}>
+                  パスワードをお忘れの方
+                </span>
               </Grid>
               <Grid item>
-                <span onClick={() => setIsLogin(!isLogin)}>
+                <span onClick={() => setIsLogin(!isLogin)} className={classes.loginTogglemode}>
                   { isLogin ? 'アカウントを作成する' : 'ログインする' }
                 </span>
               </Grid>
@@ -170,6 +206,27 @@ export const Auth: React.FC = (): JSX.Element => {
               Sign In With Google
             </Button>
           </form>
+          <Modal open={openModal} onClose={() => setOpenModal(false)}>
+            <div style={getModalStyle()} className={classes.modal}>
+              <div className={classes.loginModal}>
+                <TextField
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  type="email"
+                  name="email"
+                  label="Reset E-mail"
+                  value={resetEmail}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setResetEmail(e.target.value);
+                  }}
+                />
+                <IconButton onClick={sendResetEmail}>
+                  <SendIcon />
+                </IconButton>
+              </div>
+            </div>
+          </Modal>
         </Box>
       </Grid>
     </Grid>
