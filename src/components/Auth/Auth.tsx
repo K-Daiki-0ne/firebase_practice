@@ -84,6 +84,25 @@ export const Auth: React.FC = (): JSX.Element => {
             { isLogin ? 'login' : 'register' }
           </Typography>
           <form  className={classes.form} noValidate>
+            {!isLogin && (
+              <>
+                <TextField 
+                  variant='outlined'
+                  margin='normal'
+                  required
+                  fullWidth
+                  id='username'
+                  label='Username'
+                  name='username'
+                  autoComplete='username'
+                  autoFocus
+                  value={username}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setUsername(e.target.value);
+                  }}
+                />
+              </>
+            )}
             <TextField
               margin="normal"
               required
