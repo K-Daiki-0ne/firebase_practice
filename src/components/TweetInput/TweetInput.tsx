@@ -6,7 +6,7 @@ import { Button } from '@mui/material';
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from '../../config/firebase';
 
-export const TweetInput = () => {
+export const TweetInput: React.FC = (): JSX.Element => {
   const [tweetMsg, setTweetMsg] = useState<string>('');
   const user = useSelector(selectUser);
   
