@@ -1,7 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import style from './Post.module.css';
 import { db } from '../../config/firebase';
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { 
+  collection, 
+  addDoc, 
+  getDocs, 
+  serverTimestamp, 
+  query, 
+  orderBy 
+} from "firebase/firestore";
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../store/userSlice';
 import SendIcon from '@mui/icons-material/Send';
@@ -32,6 +39,27 @@ export const Post: React.FC<Props> = (props): JSX.Element => {
       timestamp: null
     }
   ]);
+
+  useEffect(() => {
+    const unSub = async () => {
+      const orderCollection = collection(db, 'posts');
+      const orderedTweet: any = query(orderCollection,  orderBy("timestamp", "desc"));
+      setComments(
+        orderedTweet.map((doc: any) => ({
+          id: doc.id,
+          text: doc.data().text,
+          username: doc.data().username,
+          timestamp: doc.data().timestamp
+        }))
+      )
+    }
+
+    unSub();
+
+    return () => {
+      unSub();
+    }
+  }, [props.postId]);
 
   const newComment = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
