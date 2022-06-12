@@ -5,14 +5,15 @@ import styles from './Feed.module.css';
 import { TweetInput } from '../TweetInput/TweetInput';
 import { collection, getDocs } from "firebase/firestore";
 import { db } from '../../config/firebase';
-
+import { Post } from '../Post/Post';
 
 export const Feed: React.FC = (): JSX.Element => {
   const [posts, setPosts] = useState([
     {
       id: '',
       text: '',
-      username: ''
+      username: '',
+      timestamp: null
     }
   ]);
 
@@ -38,12 +39,19 @@ export const Feed: React.FC = (): JSX.Element => {
     <div className={styles.feed}>
       Feed
       <TweetInput />
-      <button
-        onClick={async () => await signOut(auth).catch((err) => console.error(err))}
-      >
-        logout
-      </button>
+        {posts[0]?.id && (
+          <>
+            {posts.map((post: any) => {
+              <Post 
+                key={post.id}
+                postId={post.id}
+                text={post.text}
+                username={post.username}
+                timestamp={post.timestamp}
+              />
+            })}
+          </>
+        )}
     </div>
-    
   )
 }
