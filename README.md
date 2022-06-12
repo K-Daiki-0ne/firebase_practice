@@ -1,34 +1,38 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Firebase practice v9~ with Next
 
-## Getting Started
+### アプリケーション概要
+Firebaseを使用したTwitter cloneアプリケーション
 
-First, run the development server:
+### 作成理由
+Firebase ver 9.0〜は以前まで(ver 8.0)と比べて大きな仕様変更が行われています。
+なので、ver 9.0〜はver 8.0と比べて何がどのように変更されたのかを知りたかったので、実際に手を動かしながら開発を実施しました。
+
+### 環境構築
 
 ```bash
-npm run dev
-# or
-yarn dev
+# npm
+npm install
+
+# yarn
+yarn install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+```bash
+# .envを作成する
+# 下記項目がfirebaseから出力されるので、設定してください。
+NEXT_PUBLIC_APIKEY=
+NEXT_PUBLIC_AUTHDOMAIN=
+NEXT_PUBLIC_PROJECTID=
+NEXT_PUBLIC_STORAGEBUCKET=
+NEXT_PUBLIC_MESSAGEINGSENDERID=
+NEXT_PUBLIC_APPID=
+NEXT_PUBLIC_MEASUREMENTID=
+```
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+```bash
+# npm
+npm run dev
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+# yarn
+yarn dev
+```
